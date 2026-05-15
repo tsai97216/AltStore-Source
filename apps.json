@@ -22,12 +22,12 @@
       "screenshots": [],
       "versions": [
         {
-          "version": "2.0.7.1",
-          "date": "2026-05-10",
-          "localizedDescription": "修复 #2002\r\n修复 #2020 by @My-Responsitories\r\n其他调整 #2032 by @My-Responsitories",
-          "downloadURL": "https://github.com/bggRGjQaUbCoE/PiliPlus/releases/download/2.0.7.1/PiliPlus_ios_2.0.7%2B4946.ipa",
-          "size": 23949646,
-          "sha1hash": "d99f428cf8b23526a4f134065defc7a06a600c06"
+          "version": "2.0.7.2",
+          "date": "2026-05-15",
+          "localizedDescription": "修复 #2075 #2087\r\n其他调整 #2100 by @My-Responsitories\r\n定时发布动态不立即检查是否可见 #2059 by @uhiovk",
+          "downloadURL": "https://github.com/bggRGjQaUbCoE/PiliPlus/releases/download/2.0.7.2/PiliPlus_ios_2.0.7%2B4956.ipa",
+          "size": 23837357,
+          "sha1hash": "1221b912e212df9f4d2adefe7dcfd80906a4ff74"
         }
       ]
     }
