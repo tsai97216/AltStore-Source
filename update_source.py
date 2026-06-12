@@ -4,7 +4,7 @@ import requests
 import hashlib
 
 # =========================
-# 🌙 ChiSource 設定
+# 🌙 Chi Source 設定
 # =========================
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 FILENAME = "apps.json"
@@ -16,11 +16,9 @@ SOURCE_URL = f"https://{YOUR_GITHUB_ID}.github.io/My-AltStore-Source/{FILENAME}"
 
 SOURCE_ICON_URL = f"https://raw.githubusercontent.com/{YOUR_GITHUB_ID}/My-AltStore-Source/main/source_icon.PNG"
 
-COLOR_MAIN = "7DCEA0"
-
 
 # =========================
-# 📦 Apps 清單
+# 📦 Apps 清單（每個 App 自己顏色）
 # =========================
 APPS = [
     {
@@ -29,7 +27,8 @@ APPS = [
         "bundleID": "com.bgg.piliplus",
         "icon": "https://raw.githubusercontent.com/bggRGjQaUbCoE/PiliPlus/main/assets/images/logo/desktop/logo_large.png",
         "subtitle": "第三方 Bilibili 客戶端",
-        "desc": "提供自動全螢幕、音量均衡、彈幕過濾等功能。"
+        "desc": "提供自動全螢幕、音量均衡、彈幕過濾等功能。",
+        "color": "7DCEA0"
     },
     {
         "repo": "Mark02-2012/YTPlusM",
@@ -37,7 +36,8 @@ APPS = [
         "bundleID": "com.mark.ytplusm",
         "icon": "https://raw.githubusercontent.com/Mark02-2012/YTPlusM/main/Resources/IMG_5913.png",
         "subtitle": "YouTube 修改版",
-        "desc": "提供去廣告、播放優化與額外功能。"
+        "desc": "提供去廣告、播放優化與額外功能。",
+        "color": "FF4D4D"
     }
 ]
 
@@ -92,7 +92,7 @@ def get_app_data(app):
         "subtitle": app["subtitle"],
         "localizedDescription": app["desc"],
         "iconURL": app["icon"],
-        "tintColor": COLOR_MAIN,
+        "tintColor": app.get("color"),
         "category": "entertainment",
         "screenshots": [],
         "versions": [
@@ -122,10 +122,10 @@ def update_source():
             apps_list.append(data)
 
     source_data = {
-        "name": f"{DISPLAY_NAME}",
-        "identifier": f"com.{DISPLAY_NAME.lower()}.custom.source",
+        "name": DISPLAY_NAME,
+        "identifier": f"com.{DISPLAY_NAME.lower().replace(' ', '')}.custom.source",
         "sourceURL": SOURCE_URL,
-        "subtitle": "iOS 修改版 Ipa",
+        "subtitle": "iOS 修改版 IPA",
         "description": f"{DISPLAY_NAME} 自動維護的 IPA Source",
         "website": f"https://github.com/{YOUR_GITHUB_ID}/My-AltStore-Source",
         "iconURL": SOURCE_ICON_URL,
