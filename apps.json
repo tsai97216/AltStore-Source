@@ -1,9 +1,9 @@
 {
-  "name": "ChiSource Source",
-  "identifier": "com.chisource.custom.source",
+  "name": "Chi Source",
+  "identifier": "com.chi source.custom.source",
   "sourceURL": "https://tsai97216.github.io/My-AltStore-Source/apps.json",
   "subtitle": "精選 iOS 增強版 App",
-  "description": "ChiSource 自動維護的 IPA Source",
+  "description": "Chi Source 自動維護的 IPA Source",
   "website": "https://github.com/tsai97216/My-AltStore-Source",
   "iconURL": "https://raw.githubusercontent.com/tsai97216/My-AltStore-Source/main/source_icon.PNG",
   "featuredApps": [
