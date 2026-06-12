@@ -2,7 +2,6 @@ name: Auto Update Apps
 
 on:
   schedule:
-    # 這裡改成 '0 * * * *'，代表每小時的第 0 分鐘執行一次
     - cron: '0 * * * *'
   workflow_dispatch:
 
@@ -11,19 +10,24 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+
       - name: Install Dependencies
         run: pip install requests
+
       - name: Run Update
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: python update_source.py
+
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Hourly Update apps.json"
+          commit_message: "chore: update apps.json [skip ci]"
           file_pattern: 'apps.json'
