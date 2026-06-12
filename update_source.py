@@ -35,8 +35,8 @@ APPS = [
         "repo": "Mark02-2012/YTPlusM",
         "name": "YTPlusM",
         "bundleID": "com.mark.ytplusm",
-        "icon": "https://raw.githubusercontent.com/Mark02-2012/YTPlusM/main/icon.png",
-        "subtitle": "YouTube 增強工具",
+        "icon": "https://raw.githubusercontent.com/Mark02-2012/YTPlusM/blob/main/Resources/IMG_5913.png",
+        "subtitle": "YouTube 修改版",
         "desc": "提供去廣告、播放優化與額外功能。"
     }
 ]
