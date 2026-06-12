@@ -44,7 +44,40 @@ LOCAL_APPS = [
 # 🌐 AppTesters
 # =========================
 SOURCE_DATA_URL = "https://raw.githubusercontent.com/apptesters-org/AppTesters_Repo/main/apps.json"
-TARGET_APPS = {"Facebook", "Threads"}
+
+TARGET_APPS = {
+    "Facebook",
+    "Threads",
+    "Instagram",
+    "EeveeSpotify",
+    "YouTube Music"
+}
+
+# =========================
+# 🎨 App 配色 + subtitle 規則
+# =========================
+APP_STYLE = {
+    "Facebook": {
+        "color": "1877F2",
+        "subtitle": "Facebook修改版"
+    },
+    "Threads": {
+        "color": "2D2D2D",
+        "subtitle": "Threads修改版"
+    },
+    "Instagram": {
+        "color": "E4405F",
+        "subtitle": "Instagram修改版"
+    },
+    "EeveeSpotify": {
+        "color": "1DB954",
+        "subtitle": "Spotify修改版"
+    },
+    "YouTube Music": {
+        "color": "FF0033",
+        "subtitle": "YouTube Music修改版"
+    }
+}
 
 # =========================
 # 📡 fetch remote
@@ -128,29 +161,24 @@ def build_from_github(app):
     }
 
 # =========================
-# 🌐 AppTesters builder（已改色 + subtitle）
+# 🌐 AppTesters builder（重點更新）
 # =========================
 def build_from_apptesters(app):
-    name = app["name"]
+    name = app.get("name")
 
-    if name == "Facebook":
-        tint = "4A90E2"
-        subtitle = "Facebook修改版"
-    elif name == "Threads":
-        tint = "2E2E2E"
-        subtitle = "Threads修改版"
-    else:
-        tint = None
-        subtitle = "Imported from AppTesters"
+    style = APP_STYLE.get(name, {
+        "color": None,
+        "subtitle": "Imported from AppTesters"
+    })
 
     return {
         "name": name,
         "bundleIdentifier": app.get("bundleIdentifier"),
         "developerName": "AppTesters",
-        "subtitle": subtitle,
+        "subtitle": style["subtitle"],
         "localizedDescription": app.get("localizedDescription", ""),
         "iconURL": app.get("iconURL") or app.get("icon"),
-        "tintColor": tint,
+        "tintColor": style["color"],
         "category": "social",
         "screenshots": [],
         "versions": [
