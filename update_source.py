@@ -112,7 +112,7 @@ def get_app_data(app):
 # 🚀 主流程
 # =========================
 def update_source():
-    print(f"🚀 正在更新 {DISPLAY_NAME} Source...")
+    print(f"🚀 正在更新 {DISPLAY_NAME}...")
 
     apps_list = []
 
@@ -122,7 +122,7 @@ def update_source():
             apps_list.append(data)
 
     source_data = {
-        "name": f"{DISPLAY_NAME} Source",
+        "name": f"{DISPLAY_NAME}",
         "identifier": f"com.{DISPLAY_NAME.lower()}.custom.source",
         "sourceURL": SOURCE_URL,
         "subtitle": "精選 iOS 增強版 App",
