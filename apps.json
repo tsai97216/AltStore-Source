@@ -1,13 +1,14 @@
 {
-  "name": "Chi 的私人商店",
-  "identifier": "com.chi.custom.source",
+  "name": "ChiSource Source",
+  "identifier": "com.chisource.custom.source",
   "sourceURL": "https://tsai97216.github.io/My-AltStore-Source/apps.json",
   "subtitle": "精選 iOS 增強版 App",
-  "description": "這是 Chi 維護的個人來源，目前專注於提供 PiliPlus 的穩定更新。",
+  "description": "ChiSource 自動維護的 IPA Source",
   "website": "https://github.com/tsai97216/My-AltStore-Source",
   "iconURL": "https://raw.githubusercontent.com/tsai97216/My-AltStore-Source/main/source_icon.PNG",
   "featuredApps": [
-    "com.bgg.piliplus"
+    "com.bgg.piliplus",
+    "com.mark.ytplusm"
   ],
   "apps": [
     {
@@ -15,7 +16,7 @@
       "bundleIdentifier": "com.bgg.piliplus",
       "developerName": "bggRGjQaUbCoE",
       "subtitle": "第三方 Bilibili iOS 客戶端增強版",
-      "localizedDescription": "PiliPlus 提供自動全螢幕、音量均衡、彈幕過濾等豐富功能，帶給你更純粹的觀影體驗。",
+      "localizedDescription": "提供自動全螢幕、音量均衡、彈幕過濾等功能。",
       "iconURL": "https://raw.githubusercontent.com/bggRGjQaUbCoE/PiliPlus/main/assets/images/logo/desktop/logo_large.png",
       "tintColor": "7DCEA0",
       "category": "entertainment",
@@ -28,6 +29,27 @@
           "downloadURL": "https://github.com/bggRGjQaUbCoE/PiliPlus/releases/download/2.0.9.1/PiliPlus_ios_2.0.9%2B5047.ipa",
           "size": 23386570,
           "sha1hash": "2519ef733399502800c715cbea5d5139665d2245"
+        }
+      ]
+    },
+    {
+      "name": "YTPlusM",
+      "bundleIdentifier": "com.mark.ytplusm",
+      "developerName": "Mark02-2012",
+      "subtitle": "YouTube 修改版",
+      "localizedDescription": "提供去廣告、播放優化與額外功能。",
+      "iconURL": "https://raw.githubusercontent.com/Mark02-2012/YTPlusM/main/Resources/IMG_5913.png",
+      "tintColor": "7DCEA0",
+      "category": "entertainment",
+      "screenshots": [],
+      "versions": [
+        {
+          "version": "5.2.1_21.22.4(86)",
+          "date": "2026-05-29",
+          "localizedDescription": "## YTPlusM release info\r\n- **YT version:** `21.22.4`\r\n- **YTLite:** `5.2.1` *(5.2.1 always the cracked version)*\r\n- **iOS 16+**\r\n## Must read:\r\n- Releases named **YTPlus** are releases with only YouPiP, YTUHD, YouQuality, RYD, YTABConfig and DontEatMyContent.\r\n- Releases named **YTPlusM** have got YouPiP, YTUHD, YouQuality, RYD, YTABConfig and DontEatMyContent **but also the extra YTPlusM tweaks** \r\n(YTweaks, Gonerino, YouSpeed, YTLowContrastMode, VolumeBoostYT, YouGetCaption). \r\n",
+          "downloadURL": "https://github.com/Mark02-2012/YTPlusM/releases/download/5.2.1_21.22.4%2886%29/YTPlusM_21.22.4_5.2.1.ipa",
+          "size": 132315084,
+          "sha1hash": "bc7feb7af7fde14da6ee0f3dd26657fff1566084"
         }
       ]
     }
