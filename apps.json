@@ -1,195 +1,56 @@
-import os
-import json
-import requests
-
-# =========================
-# 🌙 Chi Source
-# =========================
-FILENAME = "apps.json"
-
-YOUR_GITHUB_ID = "tsai97216"
-DISPLAY_NAME = "Chi Source"
-
-SOURCE_URL = f"https://{YOUR_GITHUB_ID}.github.io/My-AltStore-Source/{FILENAME}"
-SOURCE_ICON_URL = f"https://raw.githubusercontent.com/{YOUR_GITHUB_ID}/My-AltStore-Source/main/source_icon.PNG"
-
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-
-# =========================
-# 📦 GitHub Apps
-# =========================
-LOCAL_APPS = [
+{
+  "name": "Chi Source",
+  "identifier": "com.chisource.source",
+  "sourceURL": "https://tsai97216.github.io/My-AltStore-Source/apps.json",
+  "subtitle": "iOS IPA Source",
+  "description": "auto curated IPA source",
+  "website": "https://github.com/tsai97216/My-AltStore-Source",
+  "iconURL": "https://raw.githubusercontent.com/tsai97216/My-AltStore-Source/main/source_icon.PNG",
+  "featuredApps": [
+    "com.bgg.piliplus",
+    "com.mark.ytplusm"
+  ],
+  "apps": [
     {
-        "repo": "bggRGjQaUbCoE/PiliPlus",
-        "name": "PiliPlus",
-        "bundleID": "com.bgg.piliplus",
-        "icon": "https://raw.githubusercontent.com/bggRGjQaUbCoE/PiliPlus/main/assets/images/logo/desktop/logo_large.png",
-        "subtitle": "第三方 Bilibili 客戶端",
-        "desc": "提供自動全螢幕、音量均衡、彈幕過濾等功能。",
-        "color": "7DCEA0"
+      "name": "PiliPlus",
+      "bundleIdentifier": "com.bgg.piliplus",
+      "developerName": "bggRGjQaUbCoE",
+      "subtitle": "第三方 Bilibili 客戶端",
+      "localizedDescription": "提供自動全螢幕、音量均衡、彈幕過濾等功能。",
+      "iconURL": "https://raw.githubusercontent.com/bggRGjQaUbCoE/PiliPlus/main/assets/images/logo/desktop/logo_large.png",
+      "tintColor": "7DCEA0",
+      "category": "entertainment",
+      "screenshots": [],
+      "versions": [
+        {
+          "version": "2.0.9.1",
+          "date": "2026-06-12",
+          "localizedDescription": "直播支持切换线路\r\n桌面端支持自定义最大音量 #2199\r\n移动端支持设置播放器音量 #2358\r\n优化视频字幕、截图 #2364 by @My-Responsitories\r\n音乐页面显示全部标签 #2363 by @My-Responsitories\r\n支持自定义播放缓存大小、缓存时长 #2370 by @My-Responsitories\r\n\r\n修复 #2342 #2350 #2351 #2386\r\n修复桌面端富文本输入 #2123 #2215 #2300\r\n修复安卓端验证码窗口显示 #2341 by @My-Responsitories",
+          "downloadURL": "https://github.com/bggRGjQaUbCoE/PiliPlus/releases/download/2.0.9.1/PiliPlus_ios_2.0.9%2B5047.ipa",
+          "size": 23386570
+        }
+      ]
     },
     {
-        "repo": "Mark02-2012/YTPlusM",
-        "name": "YTPlusM",
-        "bundleID": "com.mark.ytplusm",
-        "icon": "https://raw.githubusercontent.com/Mark02-2012/YTPlusM/main/Resources/IMG_5913.png",
-        "subtitle": "YouTube 修改版",
-        "desc": "提供去廣告、播放優化與額外功能。",
-        "color": "FF4D4D"
+      "name": "YTPlusM",
+      "bundleIdentifier": "com.mark.ytplusm",
+      "developerName": "Mark02-2012",
+      "subtitle": "YouTube 修改版",
+      "localizedDescription": "提供去廣告、播放優化與額外功能。",
+      "iconURL": "https://raw.githubusercontent.com/Mark02-2012/YTPlusM/main/Resources/IMG_5913.png",
+      "tintColor": "FF4D4D",
+      "category": "entertainment",
+      "screenshots": [],
+      "versions": [
+        {
+          "version": "5.2.1_21.22.4(86)",
+          "date": "2026-05-29",
+          "localizedDescription": "## YTPlusM release info\r\n- **YT version:** `21.22.4`\r\n- **YTLite:** `5.2.1` *(5.2.1 always the cracked version)*\r\n- **iOS 16+**\r\n## Must read:\r\n- Releases named **YTPlus** are releases with only YouPiP, YTUHD, YouQuality, RYD, YTABConfig and DontEatMyContent.\r\n- Releases named **YTPlusM** have got YouPiP, YTUHD, YouQuality, RYD, YTABConfig and DontEatMyContent **but also the extra YTPlusM tweaks** \r\n(YTweaks, Gonerino, YouSpeed, YTLowContrastMode, VolumeBoostYT, YouGetCaption). \r\n",
+          "downloadURL": "https://github.com/Mark02-2012/YTPlusM/releases/download/5.2.1_21.22.4%2886%29/YTPlusM_21.22.4_5.2.1.ipa",
+          "size": 132315084
+        }
+      ]
     }
-]
-
-# =========================
-# 🌐 AppTesters
-# =========================
-SOURCE_DATA_URL = "https://raw.githubusercontent.com/apptesters-org/AppTesters_Repo/main/apps.json"
-TARGET_NAMES = {"Facebook", "Threads"}
-
-# =========================
-# 📡 fetch
-# =========================
-def fetch_remote():
-    r = requests.get(SOURCE_DATA_URL)
-    r.raise_for_status()
-    return r.json().get("apps", [])
-
-# =========================
-# 🔍 filter by name ONLY
-# =========================
-def filter_remote(apps):
-    result = []
-
-    for a in apps:
-        name = a.get("name", "")
-        if any(t in name for t in TARGET_NAMES):
-            result.append(a)
-
-    return result
-
-# =========================
-# 🧠 dedupe by name（只留最後一個）
-# =========================
-def dedupe_by_name(apps):
-    merged = {}
-
-    for app in apps:
-        name = app.get("name")
-        if not name:
-            continue
-
-        merged[name] = app  # 後面覆蓋前面（= 最新）
-
-    return list(merged.values())
-
-# =========================
-# 🐙 GitHub build
-# =========================
-def build_from_github(app):
-    headers = {"Authorization": f"token {GITHUB_TOKEN}"} if GITHUB_TOKEN else {}
-    url = f"https://api.github.com/repos/{app['repo']}/releases/latest"
-
-    r = requests.get(url, headers=headers)
-    data = r.json()
-
-    assets = data.get("assets", [])
-    ipa = next((a for a in assets if a["name"].endswith(".ipa")), None)
-
-    return {
-        "name": app["name"],
-        "bundleIdentifier": app["bundleID"],
-        "developerName": app["repo"].split("/")[0],
-        "subtitle": app["subtitle"],
-        "localizedDescription": app["desc"],
-        "iconURL": app["icon"],
-        "tintColor": app["color"],
-        "category": "entertainment",
-        "screenshots": [],
-        "versions": [
-            {
-                "version": (data.get("tag_name") or "").replace("v", ""),
-                "date": (data.get("published_at") or "")[:10],
-                "localizedDescription": (data.get("body") or "")[:1000],
-                "downloadURL": ipa["browser_download_url"] if ipa else "",
-                "size": ipa["size"] if ipa else 0,
-            }
-        ]
-    }
-
-# =========================
-# 🌐 AppTesters build
-# =========================
-def build_from_apptesters(app):
-    v = app.get("versions", [{}])[0]
-
-    return {
-        "name": app.get("name"),
-        "bundleIdentifier": app.get("bundleIdentifier"),
-        "developerName": "AppTesters",
-        "subtitle": "Imported from AppTesters",
-        "localizedDescription": app.get("localizedDescription", ""),
-        "iconURL": app.get("iconURL"),
-        "tintColor": None,
-        "category": "social",
-        "screenshots": [],
-        "versions": [
-            {
-                "version": v.get("version", ""),
-                "date": v.get("date", ""),
-                "localizedDescription": app.get("localizedDescription", ""),
-                "downloadURL": v.get("downloadURL"),
-                "size": v.get("size", 0),
-            }
-        ]
-    }
-
-# =========================
-# 🚀 MAIN
-# =========================
-def update_source():
-    print(f"🚀 Building {DISPLAY_NAME}")
-
-    apps_list = []
-
-    # ------------------
-    # GitHub apps
-    # ------------------
-    for app in LOCAL_APPS:
-        apps_list.append(build_from_github(app))
-
-    # ------------------
-    # AppTesters apps
-    # ------------------
-    remote = fetch_remote()
-    remote = filter_remote(remote)
-
-    # 🔥 不比版本，只留最後一個 name
-    remote = dedupe_by_name(remote)
-
-    print("📦 AppTesters final:", len(remote))
-
-    for app in remote:
-        apps_list.append(build_from_apptesters(app))
-
-    # ------------------
-    # output
-    # ------------------
-    source = {
-        "name": DISPLAY_NAME,
-        "identifier": f"com.{DISPLAY_NAME.lower().replace(' ', '')}.source",
-        "sourceURL": SOURCE_URL,
-        "subtitle": "iOS IPA Source",
-        "description": "auto curated IPA source",
-        "website": f"https://github.com/{YOUR_GITHUB_ID}/My-AltStore-Source",
-        "iconURL": SOURCE_ICON_URL,
-        "featuredApps": [a["bundleIdentifier"] for a in apps_list],
-        "apps": apps_list,
-        "news": []
-    }
-
-    with open(FILENAME, "w", encoding="utf-8") as f:
-        json.dump(source, f, indent=2, ensure_ascii=False)
-
-    print("🎉 DONE")
-
-if __name__ == "__main__":
-    update_source()
+  ],
+  "news": []
+}
