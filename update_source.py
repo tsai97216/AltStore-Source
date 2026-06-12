@@ -43,8 +43,7 @@ LOCAL_APPS = [
 # 🌐 AppTesters
 # =========================
 SOURCE_DATA_URL = "https://raw.githubusercontent.com/apptesters-org/AppTesters_Repo/main/apps.json"
-
-TARGET_APPS = {"Facebook", "Threads"}
+TARGET_NAMES = {"Facebook", "Threads"}
 
 # =========================
 # 📡 fetch
@@ -52,71 +51,35 @@ TARGET_APPS = {"Facebook", "Threads"}
 def fetch_remote():
     r = requests.get(SOURCE_DATA_URL)
     r.raise_for_status()
-    data = r.json()
-
-    print("📦 AppTesters apps count:", len(data.get("apps", [])))
-
-    return data.get("apps", [])
+    return r.json().get("apps", [])
 
 # =========================
-# 🔍 filter（超寬鬆，避免全死）
+# 🔍 filter by name ONLY
 # =========================
 def filter_remote(apps):
     result = []
 
     for a in apps:
         name = a.get("name", "")
-        if any(t in name for t in TARGET_APPS):
+        if any(t in name for t in TARGET_NAMES):
             result.append(a)
 
-    print("🔍 filtered apps:", len(result))
     return result
 
 # =========================
-# 🧠 version compare（安全）
+# 🧠 dedupe by name（只留最後一個）
 # =========================
-def parse_version(v):
-    try:
-        return tuple(int(x) for x in v.split("."))
-    except:
-        return (0, 0, 0)
-
-def get_version(app):
-    try:
-        return app["versions"][0]["version"]
-    except:
-        return "0.0.0"
-
-# =========================
-# 🧠 merge latest（穩）
-# =========================
-def merge_latest(apps):
+def dedupe_by_name(apps):
     merged = {}
 
     for app in apps:
-        key = app.get("bundleIdentifier")
-        if not key:
+        name = app.get("name")
+        if not name:
             continue
 
-        v = parse_version(get_version(app))
+        merged[name] = app  # 後面覆蓋前面（= 最新）
 
-        if key not in merged:
-            merged[key] = app
-        else:
-            old_v = parse_version(get_version(merged[key]))
-
-            if v > old_v:
-                merged[key] = app
-
-    print("🧠 merged apps:", len(merged))
     return list(merged.values())
-
-# =========================
-# 🧼 validate（超寬鬆版）
-# =========================
-def is_valid(app):
-    v = app.get("versions", [{}])[0]
-    return v.get("version") is not None
 
 # =========================
 # 🐙 GitHub build
@@ -170,7 +133,7 @@ def build_from_apptesters(app):
         "screenshots": [],
         "versions": [
             {
-                "version": v.get("version", "0.0.0"),
+                "version": v.get("version", ""),
                 "date": v.get("date", ""),
                 "localizedDescription": app.get("localizedDescription", ""),
                 "downloadURL": v.get("downloadURL"),
@@ -199,10 +162,10 @@ def update_source():
     remote = fetch_remote()
     remote = filter_remote(remote)
 
-    remote = [a for a in remote if is_valid(a)]
-    remote = merge_latest(remote)
+    # 🔥 不比版本，只留最後一個 name
+    remote = dedupe_by_name(remote)
 
-    print("📦 final AppTesters:", len(remote))
+    print("📦 AppTesters final:", len(remote))
 
     for app in remote:
         apps_list.append(build_from_apptesters(app))
