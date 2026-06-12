@@ -1,7 +1,6 @@
 import os
 import json
 import requests
-from packaging import version
 
 # =========================
 # 🌙 Chi Source 基本設定
@@ -14,10 +13,13 @@ DISPLAY_NAME = "Chi Source"
 SOURCE_URL = f"https://{YOUR_GITHUB_ID}.github.io/My-AltStore-Source/{FILENAME}"
 SOURCE_ICON_URL = f"https://raw.githubusercontent.com/{YOUR_GITHUB_ID}/My-AltStore-Source/main/source_icon.PNG"
 
+# =========================
+# 🔐 Token
+# =========================
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
 # =========================
-# 📦 GitHub Apps
+# 📦 本地 GitHub Apps
 # =========================
 LOCAL_APPS = [
     {
@@ -28,6 +30,7 @@ LOCAL_APPS = [
         "subtitle": "第三方 Bilibili 客戶端",
         "desc": "提供自動全螢幕、音量均衡、彈幕過濾等功能。",
         "color": "7DCEA0",
+        "source_type": "github"
     },
     {
         "repo": "Mark02-2012/YTPlusM",
@@ -37,51 +40,30 @@ LOCAL_APPS = [
         "subtitle": "YouTube 修改版",
         "desc": "提供去廣告、播放優化與額外功能。",
         "color": "FF4D4D",
+        "source_type": "github"
     }
 ]
 
 # =========================
-# 🌐 AppTesters Source
+# 🌐 AppTesters source
 # =========================
 SOURCE_DATA_URL = "https://raw.githubusercontent.com/apptesters-org/AppTesters_Repo/main/apps.json"
+
 TARGET_APPS = {"Facebook", "Threads"}
 
 # =========================
-# 📡 讀取 AppTesters
+# 📡 讀遠端 source
 # =========================
 def fetch_remote():
     r = requests.get(SOURCE_DATA_URL)
     r.raise_for_status()
-    return r.json().get("apps", [])
+    return r.json()["apps"]
 
+# =========================
+# 🔍 篩選遠端 app
+# =========================
 def filter_remote(apps):
     return [a for a in apps if a.get("name") in TARGET_APPS]
-
-# =========================
-# 🧠 選最新版本（核心修復）
-# =========================
-def pick_latest_version(app):
-    versions = app.get("versions", [])
-
-    # 過濾壞資料
-    versions = [
-        v for v in versions
-        if v.get("version") and v.get("downloadURL")
-    ]
-
-    if not versions:
-        return None
-
-    # 排序版本號
-    try:
-        versions.sort(
-            key=lambda x: version.parse(x.get("version", "0.0.0")),
-            reverse=True
-        )
-    except:
-        pass
-
-    return versions[0]
 
 # =========================
 # 🐙 GitHub builder
@@ -118,17 +100,12 @@ def build_from_github(app):
     }
 
 # =========================
-# 🌐 AppTesters builder（修正版）
+# 🌐 AppTesters builder
 # =========================
 def build_from_apptesters(app):
-    latest = pick_latest_version(app)
-
-    if not latest:
-        return None
-
     return {
-        "name": app.get("name"),
-        "bundleIdentifier": app.get("bundleIdentifier"),
+        "name": app["name"],
+        "bundleIdentifier": app.get("bundleID") or app.get("bundleIdentifier"),
         "developerName": "AppTesters",
         "subtitle": "Imported from AppTesters",
         "localizedDescription": app.get("localizedDescription", ""),
@@ -138,25 +115,14 @@ def build_from_apptesters(app):
         "screenshots": [],
         "versions": [
             {
-                "version": latest.get("version", ""),
-                "date": latest.get("date", ""),
+                "version": app.get("version", ""),
+                "date": app.get("versionDate", ""),
                 "localizedDescription": app.get("localizedDescription", ""),
-                "downloadURL": latest.get("downloadURL", ""),
-                "size": latest.get("size", 0),
+                "downloadURL": app.get("downloadURL") or app.get("down"),
+                "size": app.get("size", 0),
             }
         ]
     }
-
-# =========================
-# 🧼 去重
-# =========================
-def dedupe_final(apps):
-    seen = {}
-    for a in apps:
-        key = a.get("bundleIdentifier")
-        if key:
-            seen[key] = a
-    return list(seen.values())
 
 # =========================
 # 🚀 主流程
@@ -166,26 +132,24 @@ def update_source():
 
     apps_list = []
 
-    # GitHub apps
+    # -------------------------
+    # 1️⃣ 本地 GitHub apps
+    # -------------------------
     for app in LOCAL_APPS:
-        apps_list.append(build_from_github(app))
+        if app["source_type"] == "github":
+            apps_list.append(build_from_github(app))
 
-    # AppTesters apps
-    remote = fetch_remote()
-    remote = filter_remote(remote)
+    # -------------------------
+    # 2️⃣ AppTesters apps
+    # -------------------------
+    remote_apps = filter_remote(fetch_remote())
 
-    for app in remote:
-        built = build_from_apptesters(app)
-        if built:
-            apps_list.append(built)
+    for app in remote_apps:
+        apps_list.append(build_from_apptesters(app))
 
-    # 去重
-    apps_list = dedupe_final(apps_list)
-
-    # featuredApps（乾淨版）
-    featured = list({a["bundleIdentifier"] for a in apps_list})
-
-    # source
+    # -------------------------
+    # 3️⃣ 組 source
+    # -------------------------
     source_data = {
         "name": DISPLAY_NAME,
         "identifier": f"com.{DISPLAY_NAME.lower().replace(' ', '')}.source",
@@ -194,7 +158,7 @@ def update_source():
         "description": f"{DISPLAY_NAME} auto curated source",
         "website": f"https://github.com/{YOUR_GITHUB_ID}/My-AltStore-Source",
         "iconURL": SOURCE_ICON_URL,
-        "featuredApps": featured,
+        "featuredApps": [a["bundleIdentifier"] for a in apps_list],
         "apps": apps_list,
         "news": []
     }
