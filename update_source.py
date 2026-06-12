@@ -4,7 +4,7 @@ import requests
 from packaging import version
 
 # =========================
-# 🌙 Chi Source
+# 🌙 Chi Source 基本設定
 # =========================
 FILENAME = "apps.json"
 
@@ -41,68 +41,47 @@ LOCAL_APPS = [
 ]
 
 # =========================
-# 🌐 AppTesters
+# 🌐 AppTesters Source
 # =========================
 SOURCE_DATA_URL = "https://raw.githubusercontent.com/apptesters-org/AppTesters_Repo/main/apps.json"
 TARGET_APPS = {"Facebook", "Threads"}
 
 # =========================
-# 📡 fetch
+# 📡 讀取 AppTesters
 # =========================
 def fetch_remote():
     r = requests.get(SOURCE_DATA_URL)
     r.raise_for_status()
     return r.json().get("apps", [])
 
-# =========================
-# 🔍 filter
-# =========================
 def filter_remote(apps):
     return [a for a in apps if a.get("name") in TARGET_APPS]
 
 # =========================
-# 🧠 pick latest version per bundleID
+# 🧠 選最新版本（核心修復）
 # =========================
-def pick_latest(apps):
-    merged = {}
+def pick_latest_version(app):
+    versions = app.get("versions", [])
 
-    for app in apps:
-        key = app.get("bundleIdentifier")
-        if not key:
-            continue
+    # 過濾壞資料
+    versions = [
+        v for v in versions
+        if v.get("version") and v.get("downloadURL")
+    ]
 
-        v = app.get("versions", [{}])[0].get("version", "0.0.0")
+    if not versions:
+        return None
 
-        try:
-            v_parsed = version.parse(v)
-        except:
-            v_parsed = version.parse("0.0.0")
+    # 排序版本號
+    try:
+        versions.sort(
+            key=lambda x: version.parse(x.get("version", "0.0.0")),
+            reverse=True
+        )
+    except:
+        pass
 
-        if key not in merged:
-            merged[key] = app
-        else:
-            old_v = merged[key].get("versions", [{}])[0].get("version", "0.0.0")
-
-            try:
-                old_parsed = version.parse(old_v)
-            except:
-                old_parsed = version.parse("0.0.0")
-
-            if v_parsed > old_parsed:
-                merged[key] = app
-
-    return list(merged.values())
-
-# =========================
-# 🧼 FINAL DEDUPE (超重要)
-# =========================
-def dedupe_final(apps):
-    seen = {}
-    for a in apps:
-        key = a.get("bundleIdentifier")
-        if key:
-            seen[key] = a
-    return list(seen.values())
+    return versions[0]
 
 # =========================
 # 🐙 GitHub builder
@@ -139,10 +118,13 @@ def build_from_github(app):
     }
 
 # =========================
-# 🌐 AppTesters builder
+# 🌐 AppTesters builder（修正版）
 # =========================
 def build_from_apptesters(app):
-    v = app.get("versions", [{}])[0]
+    latest = pick_latest_version(app)
+
+    if not latest:
+        return None
 
     return {
         "name": app.get("name"),
@@ -150,58 +132,60 @@ def build_from_apptesters(app):
         "developerName": "AppTesters",
         "subtitle": "Imported from AppTesters",
         "localizedDescription": app.get("localizedDescription", ""),
-        "iconURL": app.get("iconURL"),
+        "iconURL": app.get("iconURL") or app.get("icon"),
         "tintColor": None,
         "category": "social",
         "screenshots": [],
         "versions": [
             {
-                "version": v.get("version", ""),
-                "date": v.get("date", ""),
+                "version": latest.get("version", ""),
+                "date": latest.get("date", ""),
                 "localizedDescription": app.get("localizedDescription", ""),
-                "downloadURL": v.get("downloadURL"),
-                "size": v.get("size", 0),
+                "downloadURL": latest.get("downloadURL", ""),
+                "size": latest.get("size", 0),
             }
         ]
     }
 
 # =========================
-# 🚀 MAIN
+# 🧼 去重
+# =========================
+def dedupe_final(apps):
+    seen = {}
+    for a in apps:
+        key = a.get("bundleIdentifier")
+        if key:
+            seen[key] = a
+    return list(seen.values())
+
+# =========================
+# 🚀 主流程
 # =========================
 def update_source():
     print(f"🚀 正在更新 {DISPLAY_NAME}...")
 
     apps_list = []
 
-    # -------------------------
-    # 1. GitHub apps
-    # -------------------------
+    # GitHub apps
     for app in LOCAL_APPS:
         apps_list.append(build_from_github(app))
 
-    # -------------------------
-    # 2. AppTesters apps
-    # -------------------------
+    # AppTesters apps
     remote = fetch_remote()
     remote = filter_remote(remote)
-    remote = pick_latest(remote)
 
     for app in remote:
-        apps_list.append(build_from_apptesters(app))
+        built = build_from_apptesters(app)
+        if built:
+            apps_list.append(built)
 
-    # =========================
-    # 🔥 FINAL CLEAN STEP
-    # =========================
+    # 去重
     apps_list = dedupe_final(apps_list)
 
-    # =========================
-    # featuredApps 去重
-    # =========================
+    # featuredApps（乾淨版）
     featured = list({a["bundleIdentifier"] for a in apps_list})
 
-    # =========================
-    # OUTPUT
-    # =========================
+    # source
     source_data = {
         "name": DISPLAY_NAME,
         "identifier": f"com.{DISPLAY_NAME.lower().replace(' ', '')}.source",
@@ -220,5 +204,8 @@ def update_source():
 
     print("🎉 Chi Source 更新完成")
 
+# =========================
+# ▶️ run
+# =========================
 if __name__ == "__main__":
     update_source()
