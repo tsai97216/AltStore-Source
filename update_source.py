@@ -41,7 +41,7 @@ LOCAL_APPS = [
 ]
 
 # =========================
-# 🌐 AppTesters
+# 🌐 AppTesters source
 # =========================
 SOURCE_DATA_URL = "https://raw.githubusercontent.com/apptesters-org/AppTesters_Repo/main/apps.json"
 TARGET_APPS = {"Facebook", "Threads"}
@@ -52,7 +52,7 @@ TARGET_APPS = {"Facebook", "Threads"}
 def fetch_remote():
     r = requests.get(SOURCE_DATA_URL)
     r.raise_for_status()
-    return r.json()["apps"]
+    return r.json().get("apps", [])
 
 # =========================
 # 🔍 filter target apps
@@ -64,26 +64,29 @@ def filter_remote(apps):
     ]
 
 # =========================
-# 🧼 normalize（關鍵修復）
+# 🧼 validate app（重點）
 # =========================
-def normalize_app(app):
-    """統一成安全格式，避免 KeyError"""
-    v = ""
-
+def is_valid_app(app):
     try:
-        v = app.get("versions", [{}])[0].get("version", "")
+        v = app.get("versions", [{}])[0]
+        return (
+            v.get("version") not in [None, "", " "]
+            and v.get("downloadURL") not in [None, "", " "]
+        )
     except:
-        v = ""
-
-    return {
-        "name": app.get("name"),
-        "bundleIdentifier": app.get("bundleIdentifier"),
-        "version": v or "0",
-        "raw": app
-    }
+        return False
 
 # =========================
-# 🧠 merge latest
+# 🧠 safe version extract
+# =========================
+def safe_version(app):
+    try:
+        return app.get("versions", [{}])[0].get("version", "0")
+    except:
+        return "0"
+
+# =========================
+# 🧠 merge latest (safe)
 # =========================
 def merge_latest(apps):
     merged = {}
@@ -93,18 +96,16 @@ def merge_latest(apps):
         if not key:
             continue
 
-        v = version.parse(app.get("version", "0"))
+        v = version.parse(safe_version(app))
 
         if key not in merged:
             merged[key] = app
         else:
-            old_v = version.parse(merged[key].get("version", "0"))
-
+            old_v = version.parse(safe_version(merged[key]))
             if v > old_v:
                 merged[key] = app
 
-    # 還原 raw
-    return [a["raw"] for a in merged.values()]
+    return list(merged.values())
 
 # =========================
 # 🐙 GitHub builder
@@ -175,30 +176,30 @@ def update_source():
 
     apps_list = []
 
-    # -----------------
+    # ---------------------
     # GitHub apps
-    # -----------------
+    # ---------------------
     for app in LOCAL_APPS:
         apps_list.append(build_from_github(app))
 
-    # -----------------
+    # ---------------------
     # AppTesters apps
-    # -----------------
+    # ---------------------
     remote = fetch_remote()
     remote = filter_remote(remote)
 
-    # 🔥 normalize（避免 KeyError）
-    remote = [normalize_app(a) for a in remote]
+    # ❗ 先轉乾淨格式
+    remote = [a for a in remote if is_valid_app(a)]
 
-    # 🔥 merge latest
+    # ❗ 再 merge 最新版本
     remote = merge_latest(remote)
 
     for app in remote:
         apps_list.append(build_from_apptesters(app))
 
-    # -----------------
-    # source output
-    # -----------------
+    # ---------------------
+    # output source
+    # ---------------------
     source_data = {
         "name": DISPLAY_NAME,
         "identifier": f"com.{DISPLAY_NAME.lower().replace(' ', '')}.source",
