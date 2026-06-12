@@ -50,7 +50,7 @@ TARGET_APPS = {
     "Threads",
     "Instagram",
     "EeveeSpotify",
-    "YouTube Music"
+    "YouTubeMusic"
 }
 
 # =========================
