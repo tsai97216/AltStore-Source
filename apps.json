@@ -48,11 +48,11 @@
       "screenshots": [],
       "versions": [
         {
-          "version": "5.2.1_21.22.4(86)",
-          "date": "2026-05-29",
-          "localizedDescription": "## YTPlusM release info\r\n- **YT version:** `21.22.4`\r\n- **YTLite:** `5.2.1` *(5.2.1 always the cracked version)*\r\n- **iOS 16+**\r\n## Must read:\r\n- Releases named **YTPlus** are releases with only YouPiP, YTUHD, YouQuality, RYD, YTABConfig and DontEatMyContent.\r\n- Releases named **YTPlusM** have got YouPiP, YTUHD, YouQuality, RYD, YTABConfig and DontEatMyContent **but also the extra YTPlusM tweaks** \r\n(YTweaks, Gonerino, YouSpeed, YTLowContrastMode, VolumeBoostYT, YouGetCaption). \r\n",
-          "downloadURL": "https://github.com/Mark02-2012/YTPlusM/releases/download/5.2.1_21.22.4%2886%29/YTPlusM_21.22.4_5.2.1.ipa",
-          "size": 132315084
+          "version": "5.2.1_21.24.3(95)",
+          "date": "2026-06-14",
+          "localizedDescription": "## YTPlusM release info\r\n- **YT version:** `21.24.3`\r\n- **YTLite:** `5.2.1` *(5.2.1 always the cracked version)*\r\n- **iOS 16+**\r\n## Must read:\r\n- Releases named **YTPlus** are releases with only YouPiP, YTUHD, YouQuality, RYD, YTABConfig and DontEatMyContent.\r\n- Releases named **YTPlusM** have got YouPiP, YTUHD, YouQuality, RYD, YTABConfig and DontEatMyContent **but also the extra YTPlusM tweaks** \r\n(YTweaks, Gonerino, YouSpeed, YTLowContrastMode, VolumeBoostYT, YouGetCaption). \r\n",
+          "downloadURL": "https://github.com/Mark02-2012/YTPlusM/releases/download/5.2.1_21.24.3%2895%29/YTPlusM_21.24.3_5.2.1.ipa",
+          "size": 129145054
         }
       ]
     },
