@@ -1,17 +1,17 @@
 {
-  "name": "Chi Source",
-  "identifier": "com.chisource.source",
+  "name": "Chi Sources",
+  "identifier": "com.chisources.source",
   "sourceURL": "https://tsai97216.github.io/My-AltStore-Source/apps.json",
   "subtitle": "iOS IPA Source",
-  "description": "Chi Source auto curated source",
+  "description": "Chi Sources auto curated source",
   "website": "https://github.com/tsai97216/My-AltStore-Source",
   "iconURL": "https://raw.githubusercontent.com/tsai97216/My-AltStore-Source/main/source_icon.PNG",
   "featuredApps": [
-    "com.burbn.barcelona",
     "com.bgg.piliplus",
-    "com.facebook.Facebook",
     "com.spotify.client",
-    "com.burbn.instagram"
+    "com.burbn.instagram",
+    "com.burbn.barcelona",
+    "com.facebook.Facebook"
   ],
   "apps": [
     {
