@@ -8,9 +8,9 @@
   "iconURL": "https://raw.githubusercontent.com/tsai97216/My-AltStore-Source/main/source_icon.PNG",
   "featuredApps": [
     "com.bgg.piliplus",
+    "com.burbn.barcelona",
     "com.spotify.client",
     "com.burbn.instagram",
-    "com.burbn.barcelona",
     "com.facebook.Facebook"
   ],
   "apps": [
@@ -31,6 +31,26 @@
           "localizedDescription": "修复 bug\r\n其他调整 #2404 by @My-Responsitories",
           "downloadURL": "https://github.com/bggRGjQaUbCoE/PiliPlus/releases/download/2.0.9.2/PiliPlus_ios_2.0.9%2B5051.ipa",
           "size": 23393835
+        }
+      ]
+    },
+    {
+      "name": "Threads",
+      "bundleIdentifier": "com.burbn.barcelona",
+      "developerName": "AppTesters",
+      "subtitle": "Threads修改版",
+      "localizedDescription": "Injected with Premium",
+      "iconURL": "https://raw.githubusercontent.com/apptesters-org/AppTesters_Repo/main/icons/com.burbn.barcelona.png",
+      "tintColor": "2D2D2D",
+      "category": "social",
+      "screenshots": [],
+      "versions": [
+        {
+          "version": "436.0.0",
+          "date": "2026-07-01",
+          "localizedDescription": "Injected with Premium",
+          "downloadURL": "https://github.com/apptesters-org/AppTesters_Repo/releases/download/01-07-2026/Threads_436.0.0_Premium_%40thisismanpreets_apptesters.org.ipa",
+          "size": 95311330
         }
       ]
     },
@@ -71,26 +91,6 @@
           "localizedDescription": "Injected with Premium",
           "downloadURL": "https://github.com/apptesters-org/AppTesters_Repo/releases/download/10-06-2026/Instagram_433.0.0_Premium_%40thisismanpreets_apptesters.org.ipa",
           "size": 282563167
-        }
-      ]
-    },
-    {
-      "name": "Threads",
-      "bundleIdentifier": "com.burbn.barcelona",
-      "developerName": "AppTesters",
-      "subtitle": "Threads修改版",
-      "localizedDescription": "Injected with Premium",
-      "iconURL": "https://raw.githubusercontent.com/apptesters-org/AppTesters_Repo/main/icons/com.burbn.barcelona.png",
-      "tintColor": "2D2D2D",
-      "category": "social",
-      "screenshots": [],
-      "versions": [
-        {
-          "version": "433.0.0",
-          "date": "2026-06-09",
-          "localizedDescription": "Injected with Premium",
-          "downloadURL": "https://github.com/apptesters-org/AppTesters_Repo/releases/download/09-06-2026/Threads_433.0.0_Premium_%40thisismanpreets_apptesters.org.ipa",
-          "size": 89519163
         }
       ]
     },
